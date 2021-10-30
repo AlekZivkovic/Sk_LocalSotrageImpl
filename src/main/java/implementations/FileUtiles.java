@@ -1,21 +1,26 @@
 package implementations;
 
+import model.FAFile;
+import utility.FUtility;
+
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
+
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public class FileUtiles {
-
+    private FUtility fUtility;
     public FileUtiles() {
+        this.fUtility=new FUtility();
     }
-
-    public Map<String, Integer> readFiles() {
-        return null;
-    }
-
 
     public String getFileDir(String filepath) {
         String parent="";
@@ -75,4 +80,121 @@ public class FileUtiles {
 
         return true;
     }
+
+    //Prolazimo pomocu BFS algoritma
+    public Map<String, Integer> readFiles(String koren) {
+
+        Map<String,Integer> map=new HashMap<>();
+        List<String> queue=new LinkedList<>();
+
+
+        queue.add(koren);
+        while (queue.size() != 0){
+            File ftren= new File((String) ((LinkedList) queue).poll());
+            int sum=0;
+            for(File f: ftren.listFiles()){
+                if(f.isDirectory()){
+                    queue.add(f.getPath());
+                }
+                sum++;
+            }
+            //dodavanje u mapu
+            map.put(ftren.getPath(),sum);
+        }
+
+
+
+        return map;
+    }
+
+    public List<FAFile> listSkladiste(String koren) {
+        List<FAFile> list=new LinkedList<>();
+        List<String> queue=new LinkedList<>();
+        queue.add(koren);
+        dfs(list,queue,0);
+
+        return  list;
+    }
+
+    private void dfs(List<FAFile> list, List<String> queue,int depth) {
+
+        if(queue.size() == 0 )return;
+
+            File ftren= new File((String) ((LinkedList) queue).poll());
+
+            FAFile faf=new FAFile();
+            faf.setFileId(Integer.toString(depth++));
+            faf.setName(ftren.getPath());
+            list.add(faf);
+
+
+            for(File file: ftren.listFiles()){
+                if(file.isDirectory()){
+                    queue.add(file.getPath());
+                    dfs(list,queue,depth);
+                    continue;
+                }
+                FAFile faTren=new FAFile();
+                faTren.setFileId(Integer.toString(depth));
+                faTren.setName(file.getPath());
+                list.add(faTren);
+
+            }
+
+    }
+
+
+    public boolean moveFile(String file, String path, String koren) {
+        if(!file.contains(koren) || !path.contains(koren))return  false;
+
+        File source=new File(file);
+        if(!source.exists()){
+            System.out.println("Error pri pomeranju fajlova: source ne postoji : FU:moveFile");
+            return false;
+        }
+        File dest=new File(path);
+        dest.mkdirs();
+
+        Path temp;
+        try {
+            temp = Files.move
+                    (Paths.get(source.getPath()),
+                            Paths.get(dest.getPath()+"\\"+source.getName()),StandardCopyOption.REPLACE_EXISTING);
+
+            if(temp==null){
+                System.out.println("Nastao error pri pomeranju fajlova: neuspeh  FU:moveFile");
+                return false;
+            }
+
+        } catch (IOException e) {
+            System.out.println("Nastao error pri pomeranju fajlova: FU:moveFile");
+            return false;
+            //e.printStackTrace();
+        }
+        return true;
+    }
+
+
+    public  boolean downloadFile(String filepath, String koren) {
+        if(!filepath.contains(koren))return  false;
+
+        String home = System.getProperty("user.home");
+        File dest = new File(home+"/Desktop/");
+
+        try {
+            File f=new File(filepath);
+            if(f.isDirectory()){
+                fUtility.copyDirectory(filepath,dest.getPath(),f.getParentFile().getPath().length());
+            }else{
+                fUtility.copyFile(filepath,dest.getPath());
+            }
+        } catch (IOException e) {
+            //e.printStackTrace();
+            System.out.println("Desio se error pri skidanju file : FU:downloadFile");
+        }
+
+        return  true;
+    }
+
+
 }

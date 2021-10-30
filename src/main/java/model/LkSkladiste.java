@@ -50,6 +50,9 @@ public class LkSkladiste extends Skladiste {
         return true;
     }
 
+    public Map<String, Integer> readFiles() {
+        return fUtiles.readFiles(koren);
+    }
     protected String skGetFileDir(String filepath) {
         return fUtiles.getFileDir(filepath);
     }
@@ -63,15 +66,15 @@ public class LkSkladiste extends Skladiste {
     }
 
     protected List<FAFile> skListSkaldiste() {
-        return null;
+        return fUtiles.listSkladiste(koren);
     }
 
-    protected boolean skMoveFile(String s, String s1) {
-        return false;
+    protected boolean skMoveFile(String file, String path) {
+        return fUtiles.moveFile(file,path,koren);
     }
 
-    protected boolean skDownloadFile(String s) {
-        return false;
+    protected boolean skDownloadFile(String filepath) {
+        return fUtiles.downloadFile(filepath,koren);
     }
 
     protected boolean skCreateFile(String name,String path,boolean dir) {
@@ -90,9 +93,6 @@ public class LkSkladiste extends Skladiste {
 
     public void writeConfig() { cUtiles.writeConfig(koren+"\\"+getCfile(),configuration); }
 
-    public Map<String, Integer> readFiles() {
-        return fUtiles.readFiles();
-    }
 
     protected boolean skAuntetifikacija(String user, String pass) {
         return kUtiles.autetifikacija(user,pass);

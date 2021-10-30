@@ -3,20 +3,18 @@ package utility;
 import com.google.gson.Gson;
 import model.Configuration;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class FUtility {
 
 
-    public static long fileSize(Path path) {
+    public long fileSize(Path path) {
 
         final AtomicLong size = new AtomicLong(0);
 
@@ -54,5 +52,32 @@ public class FUtility {
     }
 
 
+    //downloadFile("D:\\InteliJ\\Test\\test1","D:\\InteliJ\\Test");
+
+    public void copyDirectory(String sourceDirectoryLocation, String destinationDirectoryLocation,int sub)
+            throws IOException {
+        Files.walk(Paths.get(sourceDirectoryLocation))
+                .forEach(source -> {
+                    Path destination = Paths.get(destinationDirectoryLocation, (source.toString())
+                            .substring(sub));
+                    //System.out.println("napravljen path : "+destinationDirectoryLocation+source.toString().substring(sub));
+
+                    try {
+                        Files.copy(source, destination,StandardCopyOption.REPLACE_EXISTING);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
+                });
+    }
+
+    public void  copyFile(String filepath,String todest) throws  IOException{
+        File source = new File(filepath);
+        File dest = new File(todest+source.getName());
+
+        Files.copy(source.toPath(),dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+    }
 
 }
