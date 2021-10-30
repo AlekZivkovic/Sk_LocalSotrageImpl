@@ -17,11 +17,17 @@ public class ConfigUtiles {
 
 
     public int writeConfig(String filepath,Configuration config) {
+        Writer writer;
         try {
-            gson.toJson(config,new FileWriter(filepath));
-            //System.out.println("upisao na "+ filepath);
+            writer=new FileWriter(filepath);
+            gson.toJson(config,writer);
+           // System.out.println("upisao na "+ filepath);
+            writer.flush();
+            writer.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            System.out.println("Neuspesno ispisivanje "+ filepath);
+            return  -1;
         }
 
 
@@ -32,11 +38,19 @@ public class ConfigUtiles {
         Configuration config;
         File cfile=new File(koren +"\\"+LkSkladiste.getCfile());
 
+        BufferedReader br=null;
         try {
-            BufferedReader br= new BufferedReader(new FileReader(cfile));
+             br= new BufferedReader(new FileReader(cfile));
             config=gson.fromJson(br,Configuration.class);
-
+            //U slucaju da je prazan file
+            if(config == null){
+                config=new Configuration();
+            }
+            br.close();
         } catch (FileNotFoundException e) {
+            return  new Pair(-1,null);
+        } catch (IOException e) {
+           // e.printStackTrace();
             return  new Pair(-1,null);
         }
 

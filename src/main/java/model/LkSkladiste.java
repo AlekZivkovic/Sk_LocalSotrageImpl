@@ -3,9 +3,10 @@ package model;
 import implementations.ConfigUtiles;
 import implementations.FileUtiles;
 import implementations.KorisnikUtiles;
-import model.Pair;
+
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -34,8 +35,19 @@ public class LkSkladiste extends Skladiste {
         return korCheck && configCheck;
     }
 
-    public boolean inicializuj(String s) {
-        return false;
+    public boolean inicializuj(String koren) {
+        File sk=new File(koren);
+        if(!sk.exists()){
+            sk.mkdirs();
+        }
+
+        int fl1,fl=cUtiles.writeConfig(koren+"\\"+getCfile(),new Configuration());
+        fl1=kUtiles.writeUsers(koren+"\\"+getUfile(),null);
+
+        if(fl1<0 || fl<0 )return  false;
+        this.koren=koren;
+
+        return true;
     }
 
     protected String skGetFileDir(String s) {
@@ -69,7 +81,7 @@ public class LkSkladiste extends Skladiste {
     public int readConfig() {
             Pair rc=cUtiles.readConfig(koren);
             if(rc.getValue() == null){
-                System.out.println("Error occured with raeding Config file");
+                System.out.println("Error occured with reading Config file");
                 return (int) rc.getKey();
             }
             this.configuration= (Configuration) rc.getValue();
