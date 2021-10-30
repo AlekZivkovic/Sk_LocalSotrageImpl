@@ -50,16 +50,16 @@ public class LkSkladiste extends Skladiste {
         return true;
     }
 
-    protected String skGetFileDir(String s) {
-        return null;
+    protected String skGetFileDir(String filepath) {
+        return fUtiles.getFileDir(filepath);
     }
 
-    protected boolean skAddFile(String s, String s1) {
-        return false;
+    protected boolean skAddFile(String file,String path) {
+        return fUtiles.addFile(file,path,koren);
     }
 
-    protected boolean skDeleteFile(String s) {
-        return false;
+    protected boolean skDeleteFile(String filepath) {
+        return fUtiles.deleteFile(filepath,koren);
     }
 
     protected List<FAFile> skListSkaldiste() {
@@ -74,8 +74,8 @@ public class LkSkladiste extends Skladiste {
         return false;
     }
 
-    protected boolean skCreateFile(String s, String s1, boolean b) {
-        return false;
+    protected boolean skCreateFile(String name,String path,boolean dir) {
+        return fUtiles.createFiles(name,path,dir,koren);
     }
 
     public int readConfig() {
