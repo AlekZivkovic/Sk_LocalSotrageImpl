@@ -3,26 +3,35 @@ package model;
 import implementations.ConfigUtiles;
 import implementations.FileUtiles;
 import implementations.KorisnikUtiles;
+import model.Pair;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
 public class LkSkladiste extends Skladiste {
-    private KorisnikUtiles kUtiles;
-    private ConfigUtiles cUtiles;
-    private FileUtiles fUtiles;
+    private static KorisnikUtiles kUtiles;
+    private static ConfigUtiles cUtiles;
+    private static FileUtiles fUtiles;
+    private static  String cfile="config.json";
+    private static  String ufile="users.json";
 
 
+    static {
+        kUtiles=new KorisnikUtiles();
+        cUtiles=new ConfigUtiles();
+        fUtiles=new FileUtiles();
+    }
 
     public LkSkladiste(String path) {
         super(path);
-        this.kUtiles=new KorisnikUtiles();
-        this.cUtiles=new ConfigUtiles();
-        this.fUtiles=new FileUtiles();
     }
 
-    protected boolean load(String s) {
-        return false;
+    protected boolean load(String filepath) {
+         boolean korCheck,configCheck;
+        configCheck=new File(filepath+"\\"+getCfile()).exists();
+        korCheck= new File(filepath+"\\"+getUfile()).exists();
+        return korCheck && configCheck;
     }
 
     public boolean inicializuj(String s) {
@@ -57,15 +66,17 @@ public class LkSkladiste extends Skladiste {
         return false;
     }
 
-    public void readConfig() {
-        //this.configuration= cUtiles.readConfig;
-
+    public int readConfig() {
+            Pair rc=cUtiles.readConfig(koren);
+            if(rc.getValue() == null){
+                System.out.println("Error occured with raeding Config file");
+                return (int) rc.getKey();
+            }
+            this.configuration= (Configuration) rc.getValue();
+            return  1;
     }
 
-    public void writeConfig() {
-        cUtiles.writeConfig();
-
-    }
+    public void writeConfig() { cUtiles.writeConfig(koren+"\\"+getCfile(),configuration); }
 
     public Map<String, Integer> readFiles() {
         return fUtiles.readFiles();
@@ -85,5 +96,13 @@ public class LkSkladiste extends Skladiste {
 
     protected boolean skDelKorisnik(String s, String s1) {
         return kUtiles.delKornisk(s,s1);
+    }
+
+    public static String getCfile() {
+        return cfile;
+    }
+
+    public static String getUfile() {
+        return ufile;
     }
 }
