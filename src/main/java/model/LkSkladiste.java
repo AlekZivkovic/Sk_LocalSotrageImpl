@@ -6,16 +6,15 @@ import implementations.KorisnikUtiles;
 
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 public class LkSkladiste extends Skladiste {
-    private static KorisnikUtiles kUtiles;
-    private static ConfigUtiles cUtiles;
-    private static FileUtiles fUtiles;
-    private static  String cfile="config.json";
-    private static  String ufile="users.json";
+    private static final KorisnikUtiles kUtiles;
+    private static final ConfigUtiles cUtiles;
+    private static final FileUtiles fUtiles;
+    private static final String cfile="config.json";
+    private static final String ufile="users.json";
 
 
     static {
@@ -38,6 +37,7 @@ public class LkSkladiste extends Skladiste {
     public boolean inicializuj(String koren) {
         File sk=new File(koren);
         if(!sk.exists()){
+            //noinspection ResultOfMethodCallIgnored
             sk.mkdirs();
         }
 

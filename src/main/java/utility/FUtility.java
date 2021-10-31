@@ -1,12 +1,8 @@
 package utility;
 
-import com.google.gson.Gson;
-import model.Configuration;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.concurrent.atomic.AtomicLong;
@@ -16,8 +12,11 @@ public class FUtility {
 
     public long fileSize(Path path) {
 
-        final AtomicLong size = new AtomicLong(0);
+        File file=new File(String.valueOf(path));
+        //ako je file inace prolazi korz dir
+        if(!file.isDirectory()) return  file.length();
 
+        final AtomicLong size = new AtomicLong(0);
         try {
             Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
                 @Override

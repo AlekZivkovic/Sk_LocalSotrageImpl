@@ -4,19 +4,16 @@ import com.google.gson.Gson;
 import model.Configuration;
 import model.LkSkladiste;
 import model.Pair;
-import utility.FUtility;
 
 import java.io.*;
-import java.nio.file.Paths;
 
 public class ConfigUtiles {
-    private Gson gson;
+    private final Gson gson;
 
     public ConfigUtiles(){
         this.gson=new Gson();
 
     }
-
 
     public int writeConfig(String filepath,Configuration config) {
         Writer writer;
@@ -28,7 +25,7 @@ public class ConfigUtiles {
             writer.close();
         } catch (IOException e) {
             //e.printStackTrace();
-            System.out.println("Neuspesno ispisivanje "+ filepath);
+            System.out.println("Neuspesno ispisivanje configfile: CU: writeConfig");
             return  -1;
         }
 
@@ -40,7 +37,7 @@ public class ConfigUtiles {
         Configuration config;
         File cfile=new File(koren +"\\"+LkSkladiste.getCfile());
 
-        BufferedReader br=null;
+        BufferedReader br;
         try {
              br= new BufferedReader(new FileReader(cfile));
             config=gson.fromJson(br,Configuration.class);
@@ -49,10 +46,8 @@ public class ConfigUtiles {
                 config=new Configuration();
             }
             br.close();
-        } catch (FileNotFoundException e) {
-            return  new Pair(-1,null);
         } catch (IOException e) {
-           // e.printStackTrace();
+            System.out.println("Neuspesno ucitavanj config.josn: CU: readConfig");
             return  new Pair(-1,null);
         }
 

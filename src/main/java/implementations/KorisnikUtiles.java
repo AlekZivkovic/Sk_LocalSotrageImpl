@@ -5,33 +5,25 @@ import model.*;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 
 public class KorisnikUtiles {
-    private Gson gson;
+    private final Gson gson;
 
     public KorisnikUtiles() {
         gson=new Gson();
     }
 
 
-
-
-
     public  boolean autetifikacija(String user, String pass,String koren) {
-        Gson gson=new Gson();
         File fuser=new File(koren+"/users.json");
         if(!fuser.exists())return  false;
 
         List<LKorisnik> klist=readUser(fuser.getPath());
-        JsonArray lk=new JsonArray();
 
-        if(!klist.contains(new LKorisnik(user,pass))){
-            return  false;
-        }
-
-        return true;
+        return klist.contains(new LKorisnik(user, pass));
     }
 
 
@@ -41,21 +33,17 @@ public class KorisnikUtiles {
         korisnik.setUser(user);
         korisnik.setPrivl(privil);
 
-        if(writeUsers(filepath,korisnik) == 1){
-            return true;
-        }
-
-        return  false;
+        return writeUsers(filepath, korisnik) == 1;
     }
     ///potrebno test
     public boolean delKornisk(String user, String pass, String filepath) {
         List<LKorisnik> lk=readUser(filepath);
-        ListIterator iterator=lk.listIterator();
+        ListIterator<LKorisnik> iterator=lk.listIterator();
 
         writeUsers(filepath,null);
         boolean flag=false;
         while (iterator.hasNext()){
-            LKorisnik ktren= (LKorisnik) iterator.next();
+            LKorisnik ktren=iterator.next();
 
             if(ktren.getUser().equals(user) && ktren.getPassword().equals(pass)){
                 iterator.remove();
@@ -65,10 +53,7 @@ public class KorisnikUtiles {
             writeUsers(filepath,ktren);
         }
 
-        if(flag)return true;
-
-
-        return  false;
+        return flag;
     }
     public List<Privilegije> readPrivil(String user, String pass,String filepath){
         List<Privilegije> privl=new ArrayList<>();
@@ -88,8 +73,8 @@ public class KorisnikUtiles {
     /**
      * @apiNote Ukoliko je var user null onda pravi novi jason file,u suprotnom append na postojeci json file
      *  dodati da hvata kolekciju an ne jednog samo
-     * @return -1 ako je fail, -2 ako vec user postoji
-     * @return  1 ako je gud
+     * @return -1 ako je fail, -2 ako vec user postoji, 1 ako je gud
+     *
      * */
     public int writeUsers(String filepath, LKorisnik user) {
 
@@ -98,12 +83,9 @@ public class KorisnikUtiles {
         //System.out.println("user je "+ user);
         if(user != null){
             List<LKorisnik> lk=readUser(filepath);
-            if(lk !=null && lk.contains(user)){
+            if(lk.contains(user)){
                 return -2;
             }else{
-                if(lk== null){
-                    lk=new ArrayList<>();
-                }
                 lk.add(user);
             }
             try {
@@ -145,17 +127,11 @@ public class KorisnikUtiles {
             ak=gson.fromJson(br,LKorisnik[].class);
             br.close();
 
-            for(int i=0;i<ak.length;i++){
-                lk.add(ak[i]);
-            }
+            Collections.addAll(lk, ak);
 
 
-        } catch (FileNotFoundException e) {
-            System.out.println("Nastao problem pri ucitavanju userfile: KU:readUser");
-            return  new ArrayList<>();
         } catch (IOException e) {
             System.out.println("Nastao problem pri ucitavanju userfile: KU:readUser");
-            // e.printStackTrace();
             return  new ArrayList<>();
         }
 

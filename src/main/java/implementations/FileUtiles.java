@@ -4,20 +4,14 @@ import model.FAFile;
 import utility.FUtility;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.*;
 
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
+import java.util.*;
+
 
 public class FileUtiles {
-    private FUtility fUtility;
+    private final FUtility fUtility;
     public FileUtiles() {
         this.fUtility=new FUtility();
     }
@@ -37,6 +31,7 @@ public class FileUtiles {
         if(!path.contains(koren))return  false;
         File sk=new File(path);
         if(!sk.exists()){
+            //noinspection ResultOfMethodCallIgnored
             sk.mkdirs();
         }
         File source = new File(file);
@@ -65,10 +60,13 @@ public class FileUtiles {
 
         File f=new File(path+"\\"+name);
         if(dir){
+            //noinspection ResultOfMethodCallIgnored
             f.mkdirs();
         }else{
             try {
+                //noinspection ResultOfMethodCallIgnored
                 new File(path).mkdirs();
+                //noinspection ResultOfMethodCallIgnored
                 f.createNewFile();
             } catch (IOException e) {
                 //e.printStackTrace();
@@ -90,9 +88,10 @@ public class FileUtiles {
 
         queue.add(koren);
         while (queue.size() != 0){
+            //noinspection rawtypes
             File ftren= new File((String) ((LinkedList) queue).poll());
             int sum=0;
-            for(File f: ftren.listFiles()){
+            for(File f: Objects.requireNonNull(ftren.listFiles())){
                 if(f.isDirectory()){
                     queue.add(f.getPath());
                 }
@@ -120,6 +119,7 @@ public class FileUtiles {
 
         if(queue.size() == 0 )return;
 
+            @SuppressWarnings("rawtypes")
             File ftren= new File((String) ((LinkedList) queue).poll());
 
             FAFile faf=new FAFile();
@@ -128,7 +128,7 @@ public class FileUtiles {
             list.add(faf);
 
 
-            for(File file: ftren.listFiles()){
+            for(File file: Objects.requireNonNull(ftren.listFiles())){
                 if(file.isDirectory()){
                     queue.add(file.getPath());
                     dfs(list,queue,depth);
@@ -153,18 +153,13 @@ public class FileUtiles {
             return false;
         }
         File dest=new File(path);
+        //noinspection ResultOfMethodCallIgnored
         dest.mkdirs();
 
-        Path temp;
         try {
-            temp = Files.move
+            Files.move
                     (Paths.get(source.getPath()),
-                            Paths.get(dest.getPath()+"\\"+source.getName()),StandardCopyOption.REPLACE_EXISTING);
-
-            if(temp==null){
-                System.out.println("Nastao error pri pomeranju fajlova: neuspeh  FU:moveFile");
-                return false;
-            }
+                            Paths.get(dest.getPath() + "\\" + source.getName()), StandardCopyOption.REPLACE_EXISTING);
 
         } catch (IOException e) {
             System.out.println("Nastao error pri pomeranju fajlova: FU:moveFile");
