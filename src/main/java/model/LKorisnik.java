@@ -12,6 +12,11 @@ public class LKorisnik {
         privl=new ArrayList<>();
     }
 
+    public LKorisnik(String user, String pass) {
+        this.user=user;
+        this.password=pass;
+    }
+
 
     public String getUser() {
         return user;
@@ -35,5 +40,22 @@ public class LKorisnik {
 
     public void setPrivl(List<Privilegije> privl) {
         this.privl = privl;
+    }
+
+    @Override
+    public String toString() {
+        return "LKorisnik{" +
+                "user='" + user + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof  LKorisnik){
+            LKorisnik k=(LKorisnik)obj;
+            return  this.password.equals(k.getPassword()) && this.user.equals(k.getUser());
+        }
+        return  false;
     }
 }

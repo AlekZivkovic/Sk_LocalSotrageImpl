@@ -41,8 +41,8 @@ public class LkSkladiste extends Skladiste {
             sk.mkdirs();
         }
 
-        int fl1,fl=cUtiles.writeConfig(koren+"\\"+getCfile(),new Configuration());
-        fl1=kUtiles.writeUsers(koren+"\\"+getUfile(),null);
+        int fl1,fl=cUtiles.writeConfig(koren+"/"+getCfile(),new Configuration());
+        fl1=kUtiles.writeUsers(koren+"/"+getUfile(),null);
 
         if(fl1<0 || fl<0 )return  false;
         this.koren=koren;
@@ -91,23 +91,23 @@ public class LkSkladiste extends Skladiste {
             return  1;
     }
 
-    public void writeConfig() { cUtiles.writeConfig(koren+"\\"+getCfile(),configuration); }
+    public void writeConfig() { cUtiles.writeConfig(koren+"/"+getCfile(),configuration); }
 
 
     protected boolean skAuntetifikacija(String user, String pass) {
-        return kUtiles.autetifikacija(user,pass);
+        return kUtiles.autetifikacija(user,pass,koren);
     }
 
-    protected List<Privilegije> skReadPrivil(String s, String s1) {
-        return kUtiles.readPrivil(s,s1);
+    protected List<Privilegije> skReadPrivil(String user, String pass) {
+        return kUtiles.readPrivil(user,pass,koren+"/"+LkSkladiste.getUfile());
     }
 
-    protected boolean skMakeKorisnik(String s, String s1, List<Privilegije> list) {
-        return kUtiles.makeKorisnik(s,s1,list);
+    protected boolean skMakeKorisnik(String user, String pass, List<Privilegije> privil) {
+        return kUtiles.makeKorisnik(user,pass,privil,koren+"/"+LkSkladiste.getUfile());
     }
 
     protected boolean skDelKorisnik(String s, String s1) {
-        return kUtiles.delKornisk(s,s1);
+        return kUtiles.delKornisk(s,s1,koren+"/"+LkSkladiste.getUfile());
     }
 
     public static String getCfile() {
