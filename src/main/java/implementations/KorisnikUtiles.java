@@ -65,7 +65,7 @@ public class KorisnikUtiles {
             writeUsers(filepath,ktren);
         }
 
-
+        if(flag)return true;
 
 
         return  false;
@@ -98,9 +98,12 @@ public class KorisnikUtiles {
         //System.out.println("user je "+ user);
         if(user != null){
             List<LKorisnik> lk=readUser(filepath);
-            if(lk.contains(user)){
+            if(lk !=null && lk.contains(user)){
                 return -2;
             }else{
+                if(lk== null){
+                    lk=new ArrayList<>();
+                }
                 lk.add(user);
             }
             try {
@@ -149,11 +152,11 @@ public class KorisnikUtiles {
 
         } catch (FileNotFoundException e) {
             System.out.println("Nastao problem pri ucitavanju userfile: KU:readUser");
-            return  null;
+            return  new ArrayList<>();
         } catch (IOException e) {
             System.out.println("Nastao problem pri ucitavanju userfile: KU:readUser");
             // e.printStackTrace();
-            return  null;
+            return  new ArrayList<>();
         }
 
         return lk;
