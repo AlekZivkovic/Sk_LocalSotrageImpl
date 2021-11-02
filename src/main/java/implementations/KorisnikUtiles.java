@@ -145,6 +145,7 @@ public class KorisnikUtiles {
                 Korisnik kor=new Korisnik();
                 kor.setUsername(user);
                 kor.setPrivil(lk.getPrivl());
+                kor.setAdmin(lk.getAdmin());
                 return kor;
             }
         }
