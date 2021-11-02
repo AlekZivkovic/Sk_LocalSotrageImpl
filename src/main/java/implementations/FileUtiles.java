@@ -35,7 +35,7 @@ public class FileUtiles {
             sk.mkdirs();
         }
         File source = new File(file);
-        File dest = new File(path+"\\"+source.getName());
+        File dest = new File(path+File.separator+source.getName());
         try {
             Files.copy(source.toPath(),dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
@@ -58,7 +58,7 @@ public class FileUtiles {
     public boolean createFiles(String name, String path, boolean dir, String koren) {
         if(!path.contains(koren))return false;
 
-        File f=new File(path+"\\"+name);
+        File f=new File(path+File.separator+name);
         if(dir){
             //noinspection ResultOfMethodCallIgnored
             f.mkdirs();
@@ -159,7 +159,7 @@ public class FileUtiles {
         try {
             Files.move
                     (Paths.get(source.getPath()),
-                            Paths.get(dest.getPath() + "\\" + source.getName()), StandardCopyOption.REPLACE_EXISTING);
+                            Paths.get(dest.getPath() + File.separator + source.getName()), StandardCopyOption.REPLACE_EXISTING);
 
         } catch (IOException e) {
             System.out.println("Nastao error pri pomeranju fajlova: FU:moveFile");
@@ -192,4 +192,7 @@ public class FileUtiles {
     }
 
 
+    public long getFileSize(String file) {
+        return fUtility.fileSize(Paths.get(file));
+    }
 }

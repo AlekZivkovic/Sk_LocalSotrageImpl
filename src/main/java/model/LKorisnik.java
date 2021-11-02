@@ -1,15 +1,18 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class LKorisnik {
     private  String user;
     private  String password;
-    private List<Privilegije> privl;
+    private Map<String,List<Privilegije>> privl;
+    private boolean admin;
 
     public LKorisnik() {
-        privl=new ArrayList<>();
+        privl=new HashMap<>();
     }
 
     public LKorisnik(String user, String pass) {
@@ -34,11 +37,11 @@ public class LKorisnik {
         this.password = password;
     }
 
-    public List<Privilegije> getPrivl() {
+    public Map<String,List<Privilegije>> getPrivl() {
         return privl;
     }
 
-    public void setPrivl(List<Privilegije> privl) {
+    public void setPrivl(Map<String,List<Privilegije>> privl) {
         this.privl = privl;
     }
 
@@ -57,5 +60,13 @@ public class LKorisnik {
             return  this.password.equals(k.getPassword()) && this.user.equals(k.getUser());
         }
         return  false;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
+
+    public boolean getAdmin() {
+        return admin;
     }
 }

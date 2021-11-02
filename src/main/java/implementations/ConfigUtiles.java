@@ -15,6 +15,13 @@ public class ConfigUtiles {
 
     }
 
+    /**
+     *Funcija pise u config.json fajl.
+     * Prosledjuje se putanja do file, kao i sama instanca config klase koja treba da se upise
+     * @param  filepath putanaja do file
+     * @param  config config klasa za upisavanje
+     * @return  1 ukoliko se nije desio IOExcepiton u suprotnom -1
+     */
     public int writeConfig(String filepath,Configuration config) {
         Writer writer;
         try {
@@ -35,7 +42,7 @@ public class ConfigUtiles {
 
     public Pair readConfig(String koren) {
         Configuration config;
-        File cfile=new File(koren +"\\"+LkSkladiste.getCfile());
+        File cfile=new File(koren +File.separator+LkSkladiste.getCfile());
 
         BufferedReader br;
         try {

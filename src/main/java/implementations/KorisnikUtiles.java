@@ -4,10 +4,7 @@ import com.google.gson.*;
 import model.*;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 public class KorisnikUtiles {
     private final Gson gson;
@@ -18,7 +15,7 @@ public class KorisnikUtiles {
 
 
     public  boolean autetifikacija(String user, String pass,String koren) {
-        File fuser=new File(koren+"/users.json");
+        File fuser=new File(koren+File.separator+LkSkladiste.getUfile());
         if(!fuser.exists())return  false;
 
         List<LKorisnik> klist=readUser(fuser.getPath());
@@ -27,11 +24,12 @@ public class KorisnikUtiles {
     }
 
 
-    public boolean makeKorisnik(String user, String pass, List<Privilegije> privil,String filepath) {
+    public boolean makeKorisnik(String user, String pass, Map<String, List<Privilegije>> privil, String filepath, boolean admin) {
         LKorisnik korisnik=new LKorisnik();
         korisnik.setPassword(pass);
         korisnik.setUser(user);
         korisnik.setPrivl(privil);
+        korisnik.setAdmin(admin);
 
         return writeUsers(filepath, korisnik) == 1;
     }
@@ -55,8 +53,8 @@ public class KorisnikUtiles {
 
         return flag;
     }
-    public List<Privilegije> readPrivil(String user, String pass,String filepath){
-        List<Privilegije> privl=new ArrayList<>();
+    public Map<String,List<Privilegije>> readPrivil(String user, String pass,String filepath){
+        Map<String,List<Privilegije>> privl=new HashMap<>();
 
         List<LKorisnik> lk=readUser(filepath);
         for(LKorisnik kor: lk){
@@ -136,5 +134,48 @@ public class KorisnikUtiles {
         }
 
         return lk;
+    }
+
+    public Korisnik getKorisnik(String user, String koren) {
+        File fuser=new File(koren+File.separator+LkSkladiste.getUfile());
+        List<LKorisnik> klist=readUser(fuser.getPath());
+
+        for (LKorisnik lk: klist){
+            if(lk.getUser().equals(user)){
+                Korisnik kor=new Korisnik();
+                kor.setUsername(user);
+                kor.setPrivil(lk.getPrivl());
+                return kor;
+            }
+        }
+
+        return null;
+    }
+
+    public int updateUsers(Korisnik pKor, String koren){
+        File fuser=new File(koren+File.separator+LkSkladiste.getUfile());
+        List<LKorisnik> klist=readUser(fuser.getPath());
+
+        for (LKorisnik lk: klist){
+            if(lk.getUser().equals(pKor.getUsername())){
+                lk.setPrivl(pKor.getPrivil());
+                break;
+            }
+        }
+        String  filepath=fuser.getPath();
+        Writer writer;
+        try {
+            writer = new FileWriter(filepath);
+            gson.toJson(klist,writer);
+            //System.out.println("upisao sam korniska ");
+            writer.close();
+        } catch (IOException e) {
+            //e.printStackTrace();
+            System.out.println("Neuspesno ispisivanje usera "+ filepath);
+            return  -1;
+        }
+
+
+        return 1;
     }
 }
