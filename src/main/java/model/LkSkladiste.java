@@ -27,8 +27,8 @@ public class LkSkladiste extends Skladiste {
     }
 
     @Override
-    protected Object relativeToAbsoulute(String relative) {
-        return null;
+    protected String relativeToAbsoulute(String relative) {
+        return koren+File.separator+relative;
     }
 
     protected boolean load(String filepath) {
@@ -38,7 +38,8 @@ public class LkSkladiste extends Skladiste {
         return korCheck && configCheck;
     }
 
-    public boolean inicializuj(String koren) {
+    @Override
+    protected boolean inicializuj(String koren) {
         File sk=new File(koren);
         if(!sk.exists()){
             //noinspection ResultOfMethodCallIgnored
@@ -50,11 +51,12 @@ public class LkSkladiste extends Skladiste {
 
         if(fl1<0 || fl<0 )return  false;
         this.koren=koren;
+        this.configuration=new Configuration();
 
         return true;
     }
 
-    public Map<String, Integer> readFiles() {
+    protected Map<String, Integer> readFiles() {
         return fUtiles.readFiles(koren);
     }
     protected String skGetFileDir(String filepath) {
@@ -90,7 +92,7 @@ public class LkSkladiste extends Skladiste {
         return fUtiles.createFiles(name,path,dir,koren);
     }
 
-    public int readConfig() {
+    protected int readConfig() {
             Pair rc=cUtiles.readConfig(koren);
             if(rc.getValue() == null){
                 System.out.println("Error occured with reading Config file");
@@ -100,14 +102,14 @@ public class LkSkladiste extends Skladiste {
             return  1;
     }
 
-    public void writeConfig() { cUtiles.writeConfig(koren+File.separator+getCfile(),configuration); }
+    protected void writeConfig() { cUtiles.writeConfig(koren+File.separator+getCfile(),configuration); }
 
 
     protected boolean skAuntetifikacija(String user, String pass) {
         return kUtiles.autetifikacija(user,pass,koren);
     }
 
-    protected Map<String, List<Privilegije>> skReadPrivil(String user, String pass) {
+    protected Pair skReadPrivil(String user, String pass) {
         return kUtiles.readPrivil(user,pass,koren+File.separator+LkSkladiste.getUfile());
     }
 

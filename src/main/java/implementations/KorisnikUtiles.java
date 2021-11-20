@@ -30,7 +30,6 @@ public class KorisnikUtiles {
         korisnik.setUser(user);
         korisnik.setPrivl(privil);
         korisnik.setAdmin(admin);
-
         return writeUsers(filepath, korisnik) == 1;
     }
     ///potrebno test
@@ -53,19 +52,21 @@ public class KorisnikUtiles {
 
         return flag;
     }
-    public Map<String,List<Privilegije>> readPrivil(String user, String pass,String filepath){
-        Map<String,List<Privilegije>> privl=new HashMap<>();
-
+    public Pair readPrivil(String user, String pass, String filepath){
+        Map<String,List<Privilegije>> privl;
+        Pair p = null;
         List<LKorisnik> lk=readUser(filepath);
         for(LKorisnik kor: lk){
             if(kor.getUser().equals(user) && kor.getPassword().equals(pass)){
                 privl=kor.getPrivl();
+                p=new Pair(kor.getAdmin(), privl);
+
                 break;
             }
         }
 
 
-        return  privl;
+        return  p;
     }
 
     /**
@@ -82,14 +83,15 @@ public class KorisnikUtiles {
         if(user != null){
             List<LKorisnik> lk=readUser(filepath);
             if(lk.contains(user)){
+                //System.out.println("POSTOJI VEC USER");
                 return -2;
             }else{
                 lk.add(user);
             }
             try {
-                writer = new FileWriter(filepath, true);
+                writer = new FileWriter(filepath);
                 gson.toJson(lk,writer);
-                //System.out.println("upisao sam korniska ");
+               // System.out.println("upisao sam korniska "+ user.getUser());
                 writer.close();
             } catch (IOException e) {
                 //e.printStackTrace();
@@ -124,8 +126,8 @@ public class KorisnikUtiles {
             br= new BufferedReader(new FileReader(fuser));
             ak=gson.fromJson(br,LKorisnik[].class);
             br.close();
-
-            Collections.addAll(lk, ak);
+            if(ak!= null )
+                Collections.addAll(lk, ak);
 
 
         } catch (IOException e) {
@@ -159,7 +161,7 @@ public class KorisnikUtiles {
 
         for (LKorisnik lk: klist){
             if(lk.getUser().equals(pKor.getUsername())){
-                lk.setPrivl(pKor.getPrivil());
+                lk.nadodajPrivil(pKor.getPrivil());
                 break;
             }
         }

@@ -44,6 +44,14 @@ public class LKorisnik {
     public void setPrivl(Map<String,List<Privilegije>> privl) {
         this.privl = privl;
     }
+    public void nadodajPrivil(Map<String,List<Privilegije>> nove){
+        for (Map.Entry<String,List<Privilegije> > entry : nove.entrySet()) {
+            String key = entry.getKey();
+            privl.put(key, entry.getValue());
+
+        }
+
+    }
 
     @Override
     public String toString() {
