@@ -124,6 +124,8 @@ public class FileUtiles {
             FAFile faf=new FAFile();
             faf.setFileId(Integer.toString(depth++));
             faf.setName(ftren.getPath());
+            faf.setDir(ftren.isDirectory());
+            faf.setModifcationDate(Integer.toString((int) ftren.lastModified()));
             list.add(faf);
 
 
@@ -136,6 +138,8 @@ public class FileUtiles {
                 FAFile faTren=new FAFile();
                 faTren.setFileId(Integer.toString(depth));
                 faTren.setName(file.getPath());
+                faTren.setDir(file.isDirectory());
+                faf.setModifcationDate(Integer.toString((int) ftren.lastModified()));
                 list.add(faTren);
 
             }
