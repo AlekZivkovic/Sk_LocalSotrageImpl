@@ -139,7 +139,7 @@ public class FileUtiles {
                 faTren.setFileId(Integer.toString(depth));
                 faTren.setName(file.getPath());
                 faTren.setDir(file.isDirectory());
-                faf.setModifcationDate(Integer.toString((int) ftren.lastModified()));
+                faf.setModifcationDate(Long.toString( ftren.lastModified()));
                 list.add(faTren);
 
             }
