@@ -59,7 +59,7 @@ public class FUtility {
                 .forEach(source -> {
                     Path destination = Paths.get(destinationDirectoryLocation, (source.toString())
                             .substring(sub));
-                    //System.out.println("napravljen path : "+destinationDirectoryLocation+source.toString().substring(sub));
+                    System.out.println("napravljen path : "+destinationDirectoryLocation+source.toString().substring(sub));
 
                     try {
                         Files.copy(source, destination,StandardCopyOption.REPLACE_EXISTING);

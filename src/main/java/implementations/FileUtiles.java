@@ -39,7 +39,6 @@ public class FileUtiles {
         try {
             Files.copy(source.toPath(),dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            System.out.println("Desio se error pri dodavanju file : "+source.getName()+" FU:41");
             //e.printStackTrace();
             return  false;
         }
@@ -70,7 +69,7 @@ public class FileUtiles {
                 f.createNewFile();
             } catch (IOException e) {
                 //e.printStackTrace();
-                System.out.println("Neuspeh pravljena file "+name+" "+path+" FU:69");
+                //System.out.println("Neuspeh pravljena file "+name+" "+path+" FU:69");
                 return false;
             }
         }
@@ -149,7 +148,7 @@ public class FileUtiles {
 
         File source=new File(file);
         if(!source.exists()){
-            System.out.println("Error pri pomeranju fajlova: source ne postoji : FU:moveFile");
+            //System.out.println("Error pri pomeranju fajlova: source ne postoji : FU:moveFile");
             return false;
         }
         File dest=new File(path);
@@ -162,7 +161,7 @@ public class FileUtiles {
                             Paths.get(dest.getPath() + File.separator + source.getName()), StandardCopyOption.REPLACE_EXISTING);
 
         } catch (IOException e) {
-            System.out.println("Nastao error pri pomeranju fajlova: FU:moveFile");
+            //System.out.println("Nastao error pri pomeranju fajlova: FU:moveFile");
             return false;
             //e.printStackTrace();
         }
@@ -178,14 +177,12 @@ public class FileUtiles {
 
         try {
             File f=new File(filepath);
-            if(f.isDirectory()){
-                fUtility.copyDirectory(filepath,dest.getPath(),f.getParentFile().getPath().length());
-            }else{
-                fUtility.copyFile(filepath,dest.getPath());
-            }
+
+            fUtility.copyDirectory(filepath,dest.getPath(),f.getParentFile().getPath().length());
+
         } catch (IOException e) {
             //e.printStackTrace();
-            System.out.println("Desio se error pri skidanju file : FU:downloadFile");
+            //System.out.println("Desio se error pri skidanju file : FU:downloadFile");
         }
 
         return  true;
